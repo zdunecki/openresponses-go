@@ -16,7 +16,8 @@ PRESERVE=(
     "script.sh"
     ".github"
     ".goreleaser.yaml"
-    ".git"
+    ".git",
+    "README.md"
 )
 
 # Get the latest tag from upstream
