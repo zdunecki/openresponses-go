@@ -104,7 +104,7 @@ jobs:
         if: steps.check-tag.outputs.exists == 'false'
         run: |
           cd /tmp/openai-go
-          gopkgcp -pkg ./responses -o /tmp/extracted -mod github.com/zdunecki/openresponses-go -v
+          gopkgcp -pkg ./responses -o /tmp/extracted -mod github.com/zdunecki/openresponses-go/v3 -v
           cd $GITHUB_WORKSPACE
           cp -r /tmp/extracted/* .
 
