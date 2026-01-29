@@ -2,8 +2,9 @@ package apijson
 
 import (
 	"errors"
-	"github.com/zdunecki/openresponses-go/packages/param"
 	"reflect"
+
+	"github.com/zdunecki/openresponses-go/v3/packages/param"
 
 	"github.com/tidwall/gjson"
 )

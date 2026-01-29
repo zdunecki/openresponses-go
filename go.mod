@@ -1,4 +1,4 @@
-module github.com/zdunecki/openresponses-go
+module github.com/zdunecki/openresponses-go/v3
 
 go 1.22
 

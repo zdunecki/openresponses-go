@@ -5,10 +5,10 @@ package shared
 import (
 	"encoding/json"
 
-	"github.com/zdunecki/openresponses-go/internal/apijson"
-	"github.com/zdunecki/openresponses-go/packages/param"
-	"github.com/zdunecki/openresponses-go/packages/respjson"
-	"github.com/zdunecki/openresponses-go/shared/constant"
+	"github.com/zdunecki/openresponses-go/v3/internal/apijson"
+	"github.com/zdunecki/openresponses-go/v3/packages/param"
+	"github.com/zdunecki/openresponses-go/v3/packages/respjson"
+	"github.com/zdunecki/openresponses-go/v3/shared/constant"
 )
 
 // aliased to make [param.APIUnion] private when embedding

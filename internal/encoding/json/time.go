@@ -2,9 +2,10 @@
 package json
 
 import (
-	"github.com/zdunecki/openresponses-go/internal/encoding/json/shims"
 	"reflect"
 	"time"
+
+	"github.com/zdunecki/openresponses-go/v3/internal/encoding/json/shims"
 )
 
 type TimeMarshaler interface {

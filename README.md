@@ -7,13 +7,13 @@ Standalone Go package for [OpenResponses](https://www.openresponses.org/) API, a
 ## Installation
 
 ```bash
-go get github.com/zdunecki/openresponses-go
+go get github.com/zdunecki/openresponses-go/v3
 ```
 
 ## Usage
 
 ```go
-import "github.com/zdunecki/openresponses-go/responses"
+import "github.com/zdunecki/openresponses-go/v3/responses"
 ```
 
 ## Sync with upstream

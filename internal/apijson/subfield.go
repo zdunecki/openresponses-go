@@ -1,8 +1,9 @@
 package apijson
 
 import (
-	"github.com/zdunecki/openresponses-go/packages/respjson"
 	"reflect"
+
+	"github.com/zdunecki/openresponses-go/v3/packages/respjson"
 )
 
 func getSubField(root reflect.Value, index []int, name string) reflect.Value {

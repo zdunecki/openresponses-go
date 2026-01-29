@@ -18,11 +18,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/zdunecki/openresponses-go/internal"
-	"github.com/zdunecki/openresponses-go/internal/apierror"
-	"github.com/zdunecki/openresponses-go/internal/apiform"
-	"github.com/zdunecki/openresponses-go/internal/apiquery"
 	"github.com/tidwall/gjson"
+	"github.com/zdunecki/openresponses-go/v3/internal"
+	"github.com/zdunecki/openresponses-go/v3/internal/apierror"
+	"github.com/zdunecki/openresponses-go/v3/internal/apiform"
+	"github.com/zdunecki/openresponses-go/v3/internal/apiquery"
 )
 
 func getDefaultHeaders() map[string]string {

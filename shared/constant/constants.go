@@ -3,7 +3,7 @@
 package constant
 
 import (
-	shimjson "github.com/zdunecki/openresponses-go/internal/encoding/json"
+	shimjson "github.com/zdunecki/openresponses-go/v3/internal/encoding/json"
 )
 
 type Constant[T any] interface {

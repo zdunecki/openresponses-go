@@ -3,7 +3,7 @@ set -e
 
 # Configuration
 UPSTREAM_REPO="openai/openai-go"
-TARGET_MODULE="github.com/zdunecki/openresponses-go"
+TARGET_MODULE="github.com/zdunecki/openresponses-go/v3"
 PACKAGE_TO_EXTRACT="./responses"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/zdunecki/openresponses-go/internal/apijson"
-	"github.com/zdunecki/openresponses-go/internal/requestconfig"
-	"github.com/zdunecki/openresponses-go/option"
-	"github.com/zdunecki/openresponses-go/packages/param"
-	"github.com/zdunecki/openresponses-go/packages/respjson"
-	"github.com/zdunecki/openresponses-go/shared"
-	"github.com/zdunecki/openresponses-go/shared/constant"
+	"github.com/zdunecki/openresponses-go/v3/internal/apijson"
+	"github.com/zdunecki/openresponses-go/v3/internal/requestconfig"
+	"github.com/zdunecki/openresponses-go/v3/option"
+	"github.com/zdunecki/openresponses-go/v3/packages/param"
+	"github.com/zdunecki/openresponses-go/v3/packages/respjson"
+	"github.com/zdunecki/openresponses-go/v3/shared"
+	"github.com/zdunecki/openresponses-go/v3/shared/constant"
 )
 
 // InputTokenService contains methods and other services that help with interacting
