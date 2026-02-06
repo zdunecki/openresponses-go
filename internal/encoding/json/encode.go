@@ -29,8 +29,8 @@ import (
 	"unicode/utf8"
 	_ "unsafe" // for linkname
 
-	"github.com/zdunecki/openresponses-go/v3/internal/encoding/json/sentinel"
-	"github.com/zdunecki/openresponses-go/v3/internal/encoding/json/shims"
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/encoding/json/sentinel"
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/encoding/json/shims"
 )
 
 // Marshal returns the JSON encoding of v.

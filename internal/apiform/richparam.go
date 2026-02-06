@@ -1,10 +1,9 @@
 package apiform
 
 import (
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/param"
 	"mime/multipart"
 	"reflect"
-
-	"github.com/zdunecki/openresponses-go/v3/packages/param"
 )
 
 func (e *encoder) newRichFieldTypeEncoder(t reflect.Type) encoderFunc {

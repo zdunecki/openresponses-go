@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/requestconfig"
 	"github.com/tidwall/sjson"
-	"github.com/zdunecki/openresponses-go/v3/internal/requestconfig"
 )
 
 // RequestOption is an option for the requests made by the openai API Client

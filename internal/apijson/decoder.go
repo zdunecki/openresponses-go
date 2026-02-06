@@ -7,13 +7,12 @@ package apijson
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/param"
 	"reflect"
 	"strconv"
 	"sync"
 	"time"
 	"unsafe"
-
-	"github.com/zdunecki/openresponses-go/v3/packages/param"
 
 	"github.com/tidwall/gjson"
 )

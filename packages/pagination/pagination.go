@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/zdunecki/openresponses-go/v3/internal/apijson"
-	"github.com/zdunecki/openresponses-go/v3/internal/requestconfig"
-	"github.com/zdunecki/openresponses-go/v3/option"
-	"github.com/zdunecki/openresponses-go/v3/packages/param"
-	"github.com/zdunecki/openresponses-go/v3/packages/respjson"
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/apijson"
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/requestconfig"
+	"github.com/zdunecki/openresponses-go/v3/v3/option"
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/param"
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/respjson"
 )
 
 // aliased to make [param.APIUnion] private when embedding
