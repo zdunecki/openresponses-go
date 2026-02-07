@@ -1,10 +1,9 @@
 package sentinel
 
 import (
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/encoding/json/shims"
 	"reflect"
 	"sync"
-
-	"github.com/zdunecki/openresponses-go/v3/internal/encoding/json/shims"
 )
 
 type cacheEntry struct {

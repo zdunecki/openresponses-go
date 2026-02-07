@@ -12,16 +12,16 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/zdunecki/openresponses-go/v3/internal/apijson"
-	"github.com/zdunecki/openresponses-go/v3/internal/apiquery"
-	"github.com/zdunecki/openresponses-go/v3/internal/paramutil"
-	"github.com/zdunecki/openresponses-go/v3/internal/requestconfig"
-	"github.com/zdunecki/openresponses-go/v3/option"
-	"github.com/zdunecki/openresponses-go/v3/packages/param"
-	"github.com/zdunecki/openresponses-go/v3/packages/respjson"
-	"github.com/zdunecki/openresponses-go/v3/packages/ssestream"
-	"github.com/zdunecki/openresponses-go/v3/shared"
-	"github.com/zdunecki/openresponses-go/v3/shared/constant"
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/apijson"
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/apiquery"
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/paramutil"
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/requestconfig"
+	"github.com/zdunecki/openresponses-go/v3/v3/option"
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/param"
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/respjson"
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/ssestream"
+	"github.com/zdunecki/openresponses-go/v3/v3/shared"
+	"github.com/zdunecki/openresponses-go/v3/v3/shared/constant"
 )
 
 // ResponseService contains methods and other services that help with interacting
@@ -5907,7 +5907,7 @@ type ResponseFunctionWebSearch struct {
 	// The unique ID of the web search tool call.
 	ID string `json:"id,required"`
 	// An object describing the specific action taken in this web search call. Includes
-	// details on how the model used the web (search, open_page, find).
+	// details on how the model used the web (search, open_page, find_in_page).
 	Action ResponseFunctionWebSearchActionUnion `json:"action,required"`
 	// The status of the web search tool call.
 	//
@@ -5956,7 +5956,7 @@ func (r ResponseFunctionWebSearch) ToParam() ResponseFunctionWebSearchParam {
 type ResponseFunctionWebSearchActionUnion struct {
 	// This field is from variant [ResponseFunctionWebSearchActionSearch].
 	Query string `json:"query"`
-	// Any of "search", "open_page", "find".
+	// Any of "search", "open_page", "find_in_page".
 	Type string `json:"type"`
 	// This field is from variant [ResponseFunctionWebSearchActionSearch].
 	Queries []string `json:"queries"`
@@ -6002,7 +6002,7 @@ func (u ResponseFunctionWebSearchActionUnion) AsAny() anyResponseFunctionWebSear
 		return u.AsSearch()
 	case "open_page":
 		return u.AsOpenPage()
-	case "find":
+	case "find_in_page":
 		return u.AsFind()
 	}
 	return nil
@@ -6083,7 +6083,7 @@ type ResponseFunctionWebSearchActionOpenPage struct {
 	// The action type.
 	Type constant.OpenPage `json:"type,required"`
 	// The URL opened by the model.
-	URL string `json:"url,required" format:"uri"`
+	URL string `json:"url,nullable" format:"uri"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Type        respjson.Field
@@ -6099,12 +6099,12 @@ func (r *ResponseFunctionWebSearchActionOpenPage) UnmarshalJSON(data []byte) err
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Action type "find": Searches for a pattern within a loaded page.
+// Action type "find_in_page": Searches for a pattern within a loaded page.
 type ResponseFunctionWebSearchActionFind struct {
 	// The pattern or text to search for within the page.
 	Pattern string `json:"pattern,required"`
 	// The action type.
-	Type constant.Find `json:"type,required"`
+	Type constant.FindInPage `json:"type,required"`
 	// The URL of the page searched for the pattern.
 	URL string `json:"url,required" format:"uri"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -6142,7 +6142,7 @@ type ResponseFunctionWebSearchParam struct {
 	// The unique ID of the web search tool call.
 	ID string `json:"id,required"`
 	// An object describing the specific action taken in this web search call. Includes
-	// details on how the model used the web (search, open_page, find).
+	// details on how the model used the web (search, open_page, find_in_page).
 	Action ResponseFunctionWebSearchActionUnionParam `json:"action,omitzero,required"`
 	// The status of the web search tool call.
 	//
@@ -6237,8 +6237,8 @@ func (u ResponseFunctionWebSearchActionUnionParam) GetType() *string {
 
 // Returns a pointer to the underlying variant's property, if present.
 func (u ResponseFunctionWebSearchActionUnionParam) GetURL() *string {
-	if vt := u.OfOpenPage; vt != nil {
-		return (*string)(&vt.URL)
+	if vt := u.OfOpenPage; vt != nil && vt.URL.Valid() {
+		return &vt.URL.Value
 	} else if vt := u.OfFind; vt != nil {
 		return (*string)(&vt.URL)
 	}
@@ -6250,7 +6250,7 @@ func init() {
 		"type",
 		apijson.Discriminator[ResponseFunctionWebSearchActionSearchParam]("search"),
 		apijson.Discriminator[ResponseFunctionWebSearchActionOpenPageParam]("open_page"),
-		apijson.Discriminator[ResponseFunctionWebSearchActionFindParam]("find"),
+		apijson.Discriminator[ResponseFunctionWebSearchActionFindParam]("find_in_page"),
 	)
 }
 
@@ -6302,10 +6302,10 @@ func (r *ResponseFunctionWebSearchActionSearchSourceParam) UnmarshalJSON(data []
 
 // Action type "open_page" - Opens a specific URL from search results.
 //
-// The properties Type, URL are required.
+// The property Type is required.
 type ResponseFunctionWebSearchActionOpenPageParam struct {
 	// The URL opened by the model.
-	URL string `json:"url,required" format:"uri"`
+	URL param.Opt[string] `json:"url,omitzero" format:"uri"`
 	// The action type.
 	//
 	// This field can be elided, and will marshal its zero value as "open_page".
@@ -6321,7 +6321,7 @@ func (r *ResponseFunctionWebSearchActionOpenPageParam) UnmarshalJSON(data []byte
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Action type "find": Searches for a pattern within a loaded page.
+// Action type "find_in_page": Searches for a pattern within a loaded page.
 //
 // The properties Pattern, Type, URL are required.
 type ResponseFunctionWebSearchActionFindParam struct {
@@ -6331,8 +6331,8 @@ type ResponseFunctionWebSearchActionFindParam struct {
 	URL string `json:"url,required" format:"uri"`
 	// The action type.
 	//
-	// This field can be elided, and will marshal its zero value as "find".
-	Type constant.Find `json:"type,required"`
+	// This field can be elided, and will marshal its zero value as "find_in_page".
+	Type constant.FindInPage `json:"type,required"`
 	paramObj
 }
 
@@ -8058,6 +8058,10 @@ type ResponseInputItemShellCallOutput struct {
 	// The maximum number of UTF-8 characters captured for this shell call's combined
 	// output.
 	MaxOutputLength int64 `json:"max_output_length,nullable"`
+	// The status of the shell call output.
+	//
+	// Any of "in_progress", "completed", "incomplete".
+	Status string `json:"status,nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		CallID          respjson.Field
@@ -8065,6 +8069,7 @@ type ResponseInputItemShellCallOutput struct {
 		Type            respjson.Field
 		ID              respjson.Field
 		MaxOutputLength respjson.Field
+		Status          respjson.Field
 		ExtraFields     map[string]respjson.Field
 		raw             string
 	} `json:"-"`
@@ -9010,6 +9015,8 @@ func (u ResponseInputItemUnionParam) GetStatus() *string {
 		return (*string)(&vt.Status)
 	} else if vt := u.OfShellCall; vt != nil {
 		return (*string)(&vt.Status)
+	} else if vt := u.OfShellCallOutput; vt != nil {
+		return (*string)(&vt.Status)
 	} else if vt := u.OfApplyPatchCall; vt != nil {
 		return (*string)(&vt.Status)
 	} else if vt := u.OfApplyPatchCallOutput; vt != nil {
@@ -9900,6 +9907,10 @@ type ResponseInputItemShellCallOutputParam struct {
 	// The maximum number of UTF-8 characters captured for this shell call's combined
 	// output.
 	MaxOutputLength param.Opt[int64] `json:"max_output_length,omitzero"`
+	// The status of the shell call output.
+	//
+	// Any of "in_progress", "completed", "incomplete".
+	Status string `json:"status,omitzero"`
 	// The type of the item. Always `shell_call_output`.
 	//
 	// This field can be elided, and will marshal its zero value as
@@ -9914,6 +9925,12 @@ func (r ResponseInputItemShellCallOutputParam) MarshalJSON() (data []byte, err e
 }
 func (r *ResponseInputItemShellCallOutputParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[ResponseInputItemShellCallOutputParam](
+		"status", "in_progress", "completed", "incomplete",
+	)
 }
 
 // A tool call representing a request to create, delete, or update files using diff
@@ -14940,6 +14957,8 @@ type ToolUnion struct {
 	// This field is from variant [ToolCodeInterpreter].
 	Container ToolCodeInterpreterContainerUnion `json:"container"`
 	// This field is from variant [ToolImageGeneration].
+	Action string `json:"action"`
+	// This field is from variant [ToolImageGeneration].
 	Background string `json:"background"`
 	// This field is from variant [ToolImageGeneration].
 	InputFidelity string `json:"input_fidelity"`
@@ -14985,6 +15004,7 @@ type ToolUnion struct {
 		ServerDescription respjson.Field
 		ServerURL         respjson.Field
 		Container         respjson.Field
+		Action            respjson.Field
 		Background        respjson.Field
 		InputFidelity     respjson.Field
 		InputImageMask    respjson.Field
@@ -15476,6 +15496,10 @@ func (r *ToolCodeInterpreterContainerCodeInterpreterContainerAuto) UnmarshalJSON
 type ToolImageGeneration struct {
 	// The type of the image generation tool. Always `image_generation`.
 	Type constant.ImageGeneration `json:"type,required"`
+	// Whether to generate a new image or edit an existing image. Default: `auto`.
+	//
+	// Any of "generate", "edit", "auto".
+	Action string `json:"action"`
 	// Background type for the generated image. One of `transparent`, `opaque`, or
 	// `auto`. Default: `auto`.
 	//
@@ -15520,6 +15544,7 @@ type ToolImageGeneration struct {
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Type              respjson.Field
+		Action            respjson.Field
 		Background        respjson.Field
 		InputFidelity     respjson.Field
 		InputImageMask    respjson.Field
@@ -15838,6 +15863,14 @@ func (u ToolUnionParam) GetServerURL() *string {
 func (u ToolUnionParam) GetContainer() *ToolCodeInterpreterContainerUnionParam {
 	if vt := u.OfCodeInterpreter; vt != nil {
 		return &vt.Container
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u ToolUnionParam) GetAction() *string {
+	if vt := u.OfImageGeneration; vt != nil {
+		return &vt.Action
 	}
 	return nil
 }
@@ -16454,6 +16487,10 @@ type ToolImageGenerationParam struct {
 	//
 	// Any of "high", "low".
 	InputFidelity string `json:"input_fidelity,omitzero"`
+	// Whether to generate a new image or edit an existing image. Default: `auto`.
+	//
+	// Any of "generate", "edit", "auto".
+	Action string `json:"action,omitzero"`
 	// Background type for the generated image. One of `transparent`, `opaque`, or
 	// `auto`. Default: `auto`.
 	//
@@ -16499,6 +16536,9 @@ func (r *ToolImageGenerationParam) UnmarshalJSON(data []byte) error {
 }
 
 func init() {
+	apijson.RegisterFieldValidator[ToolImageGenerationParam](
+		"action", "generate", "edit", "auto",
+	)
 	apijson.RegisterFieldValidator[ToolImageGenerationParam](
 		"background", "transparent", "opaque", "auto",
 	)

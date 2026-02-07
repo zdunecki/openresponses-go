@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/zdunecki/openresponses-go/v3/packages/param"
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/param"
 )
 
 var encoders sync.Map // map[reflect.Type]encoderFunc

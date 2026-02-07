@@ -2,9 +2,8 @@ package param
 
 import (
 	"encoding/json"
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/encoding/json/sentinel"
 	"reflect"
-
-	"github.com/zdunecki/openresponses-go/v3/internal/encoding/json/sentinel"
 )
 
 // NullStruct is used to set a struct to the JSON value null.

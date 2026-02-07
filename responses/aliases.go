@@ -3,9 +3,9 @@
 package responses
 
 import (
-	"github.com/zdunecki/openresponses-go/v3/internal/apierror"
-	"github.com/zdunecki/openresponses-go/v3/packages/param"
-	"github.com/zdunecki/openresponses-go/v3/shared"
+	"github.com/zdunecki/openresponses-go/v3/v3/internal/apierror"
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/param"
+	"github.com/zdunecki/openresponses-go/v3/v3/shared"
 )
 
 // aliased to make [param.APIUnion] private when embedding

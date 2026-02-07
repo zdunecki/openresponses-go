@@ -1,8 +1,8 @@
 package paramutil
 
 import (
-	"github.com/zdunecki/openresponses-go/v3/packages/param"
-	"github.com/zdunecki/openresponses-go/v3/packages/respjson"
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/param"
+	"github.com/zdunecki/openresponses-go/v3/v3/packages/respjson"
 )
 
 func AddrIfPresent[T comparable](v param.Opt[T]) *T {
