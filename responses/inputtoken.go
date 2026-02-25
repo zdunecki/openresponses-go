@@ -35,7 +35,10 @@ func NewInputTokenService(opts ...option.RequestOption) (r InputTokenService) {
 	return
 }
 
-// Get input token counts
+// Returns input token counts of the request.
+//
+// Returns an object with `object` set to `response.input_tokens` and an
+// `input_tokens` count.
 func (r *InputTokenService) Count(ctx context.Context, body InputTokenCountParams, opts ...option.RequestOption) (res *InputTokenCountResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "responses/input_tokens"
@@ -44,8 +47,8 @@ func (r *InputTokenService) Count(ctx context.Context, body InputTokenCountParam
 }
 
 type InputTokenCountResponse struct {
-	InputTokens int64                        `json:"input_tokens,required"`
-	Object      constant.ResponseInputTokens `json:"object,required"`
+	InputTokens int64                        `json:"input_tokens" api:"required"`
+	Object      constant.ResponseInputTokens `json:"object" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		InputTokens respjson.Field
