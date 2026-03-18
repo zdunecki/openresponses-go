@@ -46,7 +46,7 @@ func (r *InputItemService) List(ctx context.Context, responseID string, query In
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	if responseID == "" {
 		err = errors.New("missing required response_id parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("responses/%s/input_items", responseID)
 	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
@@ -69,15 +69,15 @@ func (r *InputItemService) ListAutoPaging(ctx context.Context, responseID string
 // A list of Response items.
 type ResponseItemList struct {
 	// A list of items used to generate this response.
-	Data []ResponseItemUnion `json:"data,required"`
+	Data []ResponseItemUnion `json:"data" api:"required"`
 	// The ID of the first item in the list.
-	FirstID string `json:"first_id,required"`
+	FirstID string `json:"first_id" api:"required"`
 	// Whether there are more items available.
-	HasMore bool `json:"has_more,required"`
+	HasMore bool `json:"has_more" api:"required"`
 	// The ID of the last item in the list.
-	LastID string `json:"last_id,required"`
+	LastID string `json:"last_id" api:"required"`
 	// The type of object returned, must be `list`.
-	Object constant.List `json:"object,required"`
+	Object constant.List `json:"object" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Data        respjson.Field
