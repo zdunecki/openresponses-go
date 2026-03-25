@@ -144,7 +144,12 @@ func (r *ResponseService) Cancel(ctx context.Context, responseID string, opts ..
 	return
 }
 
-// Compact conversation
+// Compact a conversation. Returns a compacted response object.
+//
+// Learn when and how to compact long-running conversations in the
+// [conversation state guide](https://platform.openai.com/docs/guides/conversation-state#managing-the-context-window).
+// For ZDR-compatible compaction details, see
+// [Compaction (advanced)](https://platform.openai.com/docs/guides/conversation-state#compaction-advanced).
 func (r *ResponseService) Compact(ctx context.Context, body ResponseCompactParams, opts ...option.RequestOption) (res *CompactedResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "responses/compact"
@@ -2037,8 +2042,9 @@ type Response struct {
 	Reasoning shared.Reasoning `json:"reasoning,nullable"`
 	// A stable identifier used to help detect users of your application that may be
 	// violating OpenAI's usage policies. The IDs should be a string that uniquely
-	// identifies each user. We recommend hashing their username or email address, in
-	// order to avoid sending us any identifying information.
+	// identifies each user, with a maximum length of 64 characters. We recommend
+	// hashing their username or email address, in order to avoid sending us any
+	// identifying information.
 	// [Learn more](https://platform.openai.com/docs/guides/safety-best-practices#safety-identifiers).
 	SafetyIdentifier string `json:"safety_identifier"`
 	// Specifies the processing type used for serving the request.
@@ -19070,8 +19076,9 @@ type ResponseNewParams struct {
 	PromptCacheKey param.Opt[string] `json:"prompt_cache_key,omitzero"`
 	// A stable identifier used to help detect users of your application that may be
 	// violating OpenAI's usage policies. The IDs should be a string that uniquely
-	// identifies each user. We recommend hashing their username or email address, in
-	// order to avoid sending us any identifying information.
+	// identifies each user, with a maximum length of 64 characters. We recommend
+	// hashing their username or email address, in order to avoid sending us any
+	// identifying information.
 	// [Learn more](https://platform.openai.com/docs/guides/safety-best-practices#safety-identifiers).
 	SafetyIdentifier param.Opt[string] `json:"safety_identifier,omitzero"`
 	// This field is being replaced by `safety_identifier` and `prompt_cache_key`. Use
