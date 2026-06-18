@@ -40,15 +40,16 @@ func NewInputTokenService(opts ...option.RequestOption) (r InputTokenService) {
 // Returns an object with `object` set to `response.input_tokens` and an
 // `input_tokens` count.
 func (r *InputTokenService) Count(ctx context.Context, body InputTokenCountParams, opts ...option.RequestOption) (res *InputTokenCountResponse, err error) {
-	opts = slices.Concat(r.Options, opts)
+	var preClientOpts = []option.RequestOption{requestconfig.WithBearerAuthSecurity()}
+	opts = slices.Concat(preClientOpts, r.Options, opts)
 	path := "responses/input_tokens"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
+	return res, err
 }
 
 type InputTokenCountResponse struct {
-	InputTokens int64                        `json:"input_tokens,required"`
-	Object      constant.ResponseInputTokens `json:"object,required"`
+	InputTokens int64                        `json:"input_tokens" api:"required"`
+	Object      constant.ResponseInputTokens `json:"object" default:"response.input_tokens"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		InputTokens respjson.Field
@@ -101,6 +102,10 @@ type InputTokenCountParams struct {
 	// An array of tools the model may call while generating a response. You can
 	// specify which tool to use by setting the `tool_choice` parameter.
 	Tools []ToolUnionParam `json:"tools,omitzero"`
+	// A model-owned style preset to apply to this request. Omit this parameter to use
+	// the model's default style. Supported values may expand over time. Values must be
+	// at most 64 characters.
+	Personality InputTokenCountParamsPersonality `json:"personality,omitzero"`
 	// **gpt-5 and o-series models only** Configuration options for
 	// [reasoning models](https://platform.openai.com/docs/guides/reasoning).
 	Reasoning shared.ReasoningParam `json:"reasoning,omitzero"`
@@ -172,6 +177,16 @@ func (u *InputTokenCountParamsInputUnion) asAny() any {
 	}
 	return nil
 }
+
+// A model-owned style preset to apply to this request. Omit this parameter to use
+// the model's default style. Supported values may expand over time. Values must be
+// at most 64 characters.
+type InputTokenCountParamsPersonality string
+
+const (
+	InputTokenCountParamsPersonalityFriendly  InputTokenCountParamsPersonality = "friendly"
+	InputTokenCountParamsPersonalityPragmatic InputTokenCountParamsPersonality = "pragmatic"
+)
 
 // Configuration options for a text response from the model. Can be plain text or
 // structured JSON data. Learn more:
